@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Charlotte-area rental comparison</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--ink:#1c2530;--mute:#5b6775;--line:#d9dfe5;--acc:#1f5f8b;--pro:#1d6b43;--con:#a1402a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12171d;--card:#1a222b;--ink:#e8edf2;--mute:#9aa7b5;--line:#2c3743;--acc:#6fb2e0;--pro:#6fcf9b;--con:#ee9a85}}
+:root[data-theme="dark"]{--bg:#12171d;--card:#1a222b;--ink:#e8edf2;--mute:#9aa7b5;--line:#2c3743;--acc:#6fb2e0;--pro:#6fcf9b;--con:#ee9a85}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.6rem;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 16px;max-width:70ch}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+button.chip,select{font:inherit;font-size:.9rem;padding:6px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;cursor:pointer}
+button.chip[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;padding:16px;margin-bottom:14px}
+.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h2{font-size:1.1rem;margin:0}
+.area{color:var(--mute);font-size:.9rem}
+.rent{font-size:1.3rem;font-weight:700;text-align:right}
+.rent small{display:block;font-size:.75rem;font-weight:400;color:var(--mute)}
+.specs{display:flex;flex-wrap:wrap;gap:4px 16px;margin:10px 0;font-size:.9rem}
+.specs b{font-weight:600}
+p.d{margin:8px 0;max-width:75ch}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+@media (max-width:620px){.pc{grid-template-columns:1fr}.rent{text-align:left}}
+.pc h3{font-size:.9rem;margin:0 0 4px}
+.pc .p h3{color:var(--pro)}.pc .c h3{color:var(--con)}
+.pc ul{margin:0;padding-left:18px;font-size:.9rem}
+a.go{display:inline-block;margin-top:12px;padding:8px 14px;background:var(--acc);color:var(--bg);border-radius:6px;text-decoration:none;font-weight:600;font-size:.9rem}
+.note{font-size:.85rem;color:var(--mute);margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+<h1>67</h1>
+<p class="sub">Specs and descriptions are summarized from each listing (checked Oct 14, 2026). Photos are on each listing page; use the button on each card. Drive times are rough estimates, so verify them.</p>
+<div class="bar" id="bar"></div>
+<div id="list"></div>
+<p class="note">Safety, WiFi and drive times are general-knowledge estimates, not from the listings. Check the CMPD crime map, the FCC broadband map and Google Maps for each address before applying.</p>
+</main>
+<script>
+const H=[
+{n:1,a:"1190 Arges River Dr",r:"Fort Mill, SC",g:"Fort Mill",p:3850,bd:"5 bd / 4 ba",sf:3841,y:2016,lot:"0.20 ac",gar:"2-car",dr:"~30 min airport / 35-40 Uptown",u:"https://www.homes.com/property/1190-arges-river-dr-fort-mill-sc/l8t5l3w46wv1h/?l=v39j01vdfwdkq",
+d:"East-facing home in the Preserve at Riverchase. Primary suite and a second bedroom with full bath on the main level, formal dining, family room with fireplace, hardwood floors. Upstairs: three bedrooms, loft. Covered patio with outdoor kitchen and a fenced yard. Community clubhouse, pool, playground, trails, Catawba River access. 12-month lease, tenant pays utilities.",
+pro:["Two main-level bedrooms","Outdoor kitchen, fenced yard, pool and trails"],con:["$3,850 is pricey","South Carolina, so tax implications","Longest Uptown drive of the larger homes"]},
+{n:2,a:"3014 S Devon St",r:"Charlotte 28213 (Newell)",g:"NE Charlotte",p:2795,bd:"5 bd / 3 ba",sf:2890,y:"n/a",lot:"n/a",gar:"n/a",dr:"~30 min airport / 20-25 Uptown",u:"https://www.homes.com/property/3014-s-devon-st-charlotte-nc/78lqxmpe9ml7p/?l=rc328j4qmvdrd",
+d:"Spacious 5-bed with community clubhouse and pool, washer/dryer included, a deck and a fenced backyard. 12 to 24 month lease with a lease admin fee. Self-guided viewing available. Managed by Real Property Management.",
+pro:["Low rent for 5 beds","Fenced yard, deck, pool","Washer/dryer included"],con:["No year built, lot or garage info","Relisted several times recently","28213 safety varies block by block"]},
+{n:3,a:"1617 Hawthorne Ln",r:"Charlotte 28205 (Belmont / Plaza Midwood)",g:"Central",p:4995,bd:"5 bd / 4 ba",sf:3219,y:2019,lot:"0.19 ac",gar:"2-car detached",dr:"~15-20 min airport / 5-10 Uptown",u:"https://www.homes.com/property/1617-hawthorne-ln-charlotte-nc/72plxbqmbvzyp/?l=08mx2k9b269gc",
+d:"Open-concept home with a great room and fireplace, gourmet kitchen (gas range, double ovens, walk-in pantry), main-level guest bedroom, laundry and flex room. Upstairs primary suite and two more bedrooms. Detached garage with a finished apartment above (kitchen, Murphy bed, bath). Large deck, privacy-fenced landscaped yard, playground. No HOA. Walk to Plaza Midwood breweries and shops.",
+pro:["Closest to Uptown and airport","Garage apartment for guests or office","Walkable, no HOA, fenced yard"],con:["Most expensive at $4,995","Dense urban lot","Property crime typically higher in the area"]},
+{n:4,a:"2318 Phlox Ct",r:"Charlotte 28213 (Back Creek Church Rd)",g:"NE Charlotte",p:2699,bd:"5 bd / 3 ba",sf:2398,y:2000,lot:"n/a",gar:"n/a",dr:"~30 min airport / 25 Uptown",u:"https://www.homes.com/property/2318-phlox-ct-charlotte-nc/5h45gtbz1bs2m/?l=hdlfsbznp7zn2",
+d:"Open layout with a central fireplace, one main-level bedroom, kitchen with new stainless appliances and granite. Attached deck. Primary suite has its own fireplace. 12 or 24 month lease; a no-deposit option exists for a non-refundable fee. Sold 10/9/26 and now listed for rent.",
+pro:["Lowest rent at $2,699","New appliances and granite","Primary suite fireplace"],con:["Smallest at 2,398 sq ft","Built 2000","Garage and lot not listed"]},
+{n:5,a:"12216 Stoneybrook Station Pkwy",r:"Huntersville 28078",g:"Huntersville",p:2745,bd:"5 bd / 3 ba",sf:2477,y:"n/a",lot:"n/a",gar:"2-car rear-entry",dr:"~30 min airport / 30 Uptown",u:"https://www.homes.com/property/12216-stoneybrook-station-pkwy-huntersville-nc/2m8mjpezwnpsd/?l=ypler85qjpsqd",
+d:"Like-new 2-story home. Main level: living room, quartz kitchen with gas cooktop, breakfast and dining areas, guest bedroom with full bath. Upstairs: loft, primary suite with walk-in closet, three more bedrooms, laundry. Fridge, washer and dryer included; HOA paid by owner. Community pool, cabana, playground. Near I-485 and I-77. Parking restrictions apply for 3+ vehicles.",
+pro:["Great value for a like-new 5-bed","Appliances included, HOA paid","Pool, cabana, playground"],con:["Tenant pays all utilities including internet","Limited parking for 3+ cars","Year built not listed"]},
+{n:6,a:"421 Buford Way",r:"Mount Holly, NC (River Park)",g:"NW / Mt Holly",p:2950,bd:"5 bd / 4 ba",sf:"n/a",y:2022,lot:"0.39 ac",gar:"2-car",dr:"~20-25 min airport / 25-30 Uptown",u:"https://www.homes.com/property/421-buford-way-mount-holly-nc/ex5bnrdfj8fkm/?l=8swxr3jwpm52c",
+d:"Single-owner 2022 home on a cul-de-sac. Open floor plan, living room fireplace, one main-level bedroom, upstairs laundry. Stainless appliances and washer/dryer provided, tankless water heater, fully fenced backyard and covered patio. River Park amenities: pool, clubhouse, playground, trails. Minutes to the Whitewater Center. No pets.",
+pro:["Newest build, biggest lot","Cul-de-sac, fenced yard","Whitewater Center nearby"],con:["No pets allowed","Square footage not listed","Fewer dining and shopping options"]},
+{n:7,a:"6021 Whitechapel Ct",r:"Charlotte 28214 (Riverbend)",g:"NW / Mt Holly",p:3095,bd:"5 bd / 4 ba",sf:3570,y:2022,lot:"n/a",gar:"3-car",dr:"~15-20 min airport / 20-25 Uptown",u:"https://www.homes.com/property/6021-whitechapel-ct-charlotte-nc/3kgrrc6qgcmsx/?l=6c0bcg7edz7v8",
+d:"Two-story 2022 home with covered front porch, study, 9-ft ceilings, coffered dining room, granite and gas-range kitchen open to a family room with fireplace, main-level guest bedroom with bath. Upstairs loft, large primary suite, en-suite second bedroom, laundry (washer/dryer included). Three-car garage, mudroom, rear patio, community pool and playground. Required $65/mo internet; optional benefits package.",
+pro:["Close to the airport","3-car garage, mudroom","Washer/dryer included"],con:["$65/mo required internet fee","Listing details conflict on bath count and sq ft","Lot size not listed"]},
+{n:8,a:"1982 Smokey Quartz Rd",r:"Davidson / Concord 28036",g:"Concord / Davidson",p:3300,bd:"5 bd / 4.5 ba",sf:3621,y:2017,lot:"0.26 ac",gar:"2-car",dr:"~35 min airport / 35 Uptown",u:"https://www.homes.com/property/1982-smokey-quartz-rd-davidson-nc/4zrsfxsb5dfk0/?l=js0sh69dq687z",
+d:"Three-story contemporary in Waterford on the Rocky River, on a cul-de-sac. Chef's kitchen open to family room, office with French doors, formal dining. Second floor: laundry and four bedrooms including the primary suite. Third floor: fifth bedroom, full bath and a second family room. Deck, fenced backyard, community pool and playground.",
+pro:["Modern 2017 build, chef's kitchen","Bonus third-floor suite","Fenced yard, pool, cul-de-sac"],con:["Three stories of stairs, no main-level bedroom","Farther out","Tenant pays all utilities"]},
+{n:9,a:"2258 Isaac St",r:"Concord 28027 (Pelhem Pointe)",g:"Concord / Davidson",p:3400,bd:"6 bd / 4 ba",sf:3842,y:2008,lot:"0.25 ac",gar:"2-car",dr:"~35 min airport / 35 Uptown",u:"https://www.homes.com/property/2258-isaac-st-concord-nc/fff6k4llytpnc/?l=tv991khwknh8d",
+d:"Six-bedroom corner-lot home. Main level: formal dining with tray ceiling, office with French doors, living room, granite kitchen with island and big pantry, guest bedroom and full bath. Upstairs primary suite with vaulted ceiling and gas fireplace, garden tub. Screened porch, extended rear porch, fire pit, spacious backyard. Requires 600+ credit and income of 3x rent.",
+pro:["Most space per dollar","Screened porch, fire pit, big yard","Main-level bedroom and office"],con:["Built 2008","Strict application requirements","Pets need owner approval"]},
+{n:10,a:"Address hidden (likely 3034 Stephen Pace Trail)",r:"Huntersville 28078 (Oaks at Skybrook North)",g:"Huntersville",p:3345,bd:"5 bd / 4 ba",sf:3417,y:2021,lot:"0.21 ac",gar:"3-car",dr:"~30 min airport / 30-35 Uptown",u:"https://www.homes.com/property/unlisted-address/n7d6yf8psyf8n/?l=n5xyed3ftq4rz",
+d:"Like-new 2-story with two-story flex space, great room with fireplace, quartz kitchen with gas range and double wall ovens, main-level guest bedroom and bath. Upstairs primary suite, three bedrooms, loft, laundry. Front porch, extended backyard with screened porch and patio, solar panels, 3-car garage. Fridge, washer, dryer included; HOA paid by owner. Near I-77, I-485, Birkdale Village.",
+pro:["Solar panels cut electric costs","3-car garage, screened porch","Rent was recently reduced"],con:["Dogs only, pet rent applies","Tenant pays all utilities","Limited parking for 3+ cars"]},
+{n:11,a:"10435 Olde Ivy Way",r:"Charlotte 28262 (University City)",g:"NE Charlotte",p:2695,bd:"5 bd / 3 ba",sf:2785,y:2005,lot:"n/a",gar:"n/a",dr:"~30 min airport / 25 Uptown",u:"https://www.homes.com/property/10435-olde-ivy-way-charlotte-nc/7ky1b7bfm7sfr/?l=mlv74c2qn9m01",
+d:"FirstKey Homes rental, 5 bedrooms and 3 baths with central air and washer/dryer hookups. The listing has little detail on layout or yard. Extra fees apply: $55 application, $75 admin, $11/mo utility management, plus possible pool, smart home or internet charges. Rent has dropped from $3,350 since April.",
+pro:["Low rent that keeps falling","Near UNCC and Concord Mills","Professional management"],con:["Fees add up, deposit listed at $3,368","Built 2005, thin listing details","Yard and garage unknown"]},
+{n:12,a:"10008 Michael Crossing Dr",r:"Charlotte 28213 (Newell)",g:"NE Charlotte",p:2800,bd:"6 bd / 3 ba",sf:3281,y:2016,lot:"0.14 ac",gar:"2-car",dr:"~30 min airport / 25 Uptown",u:"https://www.homes.com/property/10008-michael-crossing-dr-charlotte-nc/kettcm97g87c0/?l=sl9q93vy4lklq",
+d:"Move-in-ready 6-bedroom near UNCC. Main floor has an office/bonus room with French doors and a bedroom with full bath. Upstairs primary with sitting room and two walk-in closets. Wrap-around front porch and private fenced backyard. Quick access to I-485. Price recently cut by $300.",
+pro:["6 beds for $2,800","Close to UNCC and I-485","Main-level bedroom plus office"],con:["Small 6,098 sq ft lot","Six bedrooms share three baths","Carpet and laminate flooring"]},
+{n:13,a:"6541 Dougherty Dr",r:"Charlotte 28213 (Newell South)",g:"NE Charlotte",p:2995,bd:"7 bd / 3.5 ba",sf:3314,y:1986,lot:"n/a",gar:"n/a",dr:"~30 min airport / 20-25 Uptown",u:"https://www.homes.com/property/6541-dougherty-dr-charlotte-nc/7yw7kbjjv80dh/",
+d:"Invitation Homes 7-bedroom with luxury vinyl plank, kitchen island, stainless appliances, bay windows and fireplace. Fenced yard, deck and patio. Currently being renovated; you can apply now. Required add-ons (internet $85, smart home $40, filters, billing fee) bring the monthly total to about $3,135.",
+pro:["Seven bedrooms","Fenced yard, deck, patio","Smart home included"],con:["Under renovation, not yet available","Required fees add about $140/mo","Built 1986, mixed-safety area"]},
+{n:14,a:"1093 Thoroughbred Dr",r:"Iron Station, NC (The Farm at Ingleside)",g:"Iron Station",p:2995,bd:"5 bd / 4.5 ba",sf:3740,y:"n/a",lot:"n/a",gar:"2-car",dr:"~35-40 min airport / 40-45 Uptown",u:"https://www.zillow.com/homedetails/1093-Thoroughbred-Dr-Iron-Station-NC-28080/2070759345_zpid/?utm_campaign=iosappmessage&utm_medium=referral&utm_source=txtshare",
+d:"Open layout with private office, living room fireplace and front flex room. Quartz kitchen with gas cooktop and double ovens. Upstairs bonus room and primary suite with tiled shower. Washer and dryer included. Community pool, fitness center, clubhouse, playground, trails. Access to Charlotte and Lake Norman. A $49.95/mo benefits package is added.",
+pro:["Best price per sq ft","Bonus room and office","Pool, gym, trails, Lake Norman access"],con:["Farthest from airport and Uptown","Fewer shops and restaurants nearby","Lease terms not spelled out"]},
+{n:15,a:"Address hidden",r:"Huntersville 28078 (Ramsey's Glen)",g:"Huntersville",p:3895,bd:"5 bd / 4 ba",sf:4102,y:2020,lot:"0.18 ac",gar:"3-car",dr:"~30 min airport / 30-35 Uptown",u:"https://www.homes.com/property/unlisted-address/4m24yt6q93yx5/?l=sgnn0g89r7tln",
+d:"Large 2-story home with front porch, formal dining, living room fireplace and gourmet kitchen (gas cooktop, double ovens, big walk-in pantry). Main level also has a guest suite and laundry. Upstairs primary suite, bonus room and three more bedrooms. Backyard with covered patio, 3-car garage. HOA paid by owner. Near Birkdale Village and Northcross.",
+pro:["Largest home at 4,102 sq ft","3-car garage, guest suite downstairs","Close to Birkdale and I-77/485"],con:["$3,895 is the second-highest rent","Dogs only, pet rent applies","Tenant pays all utilities"]}
+];
+const groups=["All",...new Set(H.map(h=>h.g))];
+let cur="All",sort="num";
+const bar=document.getElementById("bar"),list=document.getElementById("list");
+function draw(){
+ bar.innerHTML="";
+ groups.forEach(g=>{const b=document.createElement("button");b.className="chip";b.textContent=g;b.setAttribute("aria-pressed",g===cur);b.onclick=()=>{cur=g;draw()};bar.appendChild(b)});
+ const s=document.createElement("select");s.setAttribute("aria-label","Sort");
+ [["num","Sort: my order"],["pl","Rent: low to high"],["ph","Rent: high to low"],["sf","Sq ft: large to small"]].forEach(([v,t])=>{const o=document.createElement("option");o.value=v;o.textContent=t;if(v===sort)o.selected=true;s.appendChild(o)});
+ s.onchange=()=>{sort=s.value;draw()};bar.appendChild(s);
+ let a=H.filter(h=>cur==="All"||h.g===cur);
+ if(sort==="pl")a.sort((x,y)=>x.p-y.p);if(sort==="ph")a.sort((x,y)=>y.p-x.p);
+ if(sort==="sf")a.sort((x,y)=>(y.sf==="n/a"?0:y.sf)-(x.sf==="n/a"?0:x.sf));
+ list.innerHTML=a.map(h=>`<article class="card"><div class="top"><div><h2>#${h.n} ${h.a}</h2><div class="area">${h.r}</div></div><div class="rent">$${h.p.toLocaleString()}<small>per month</small></div></div>
+<div class="specs"><span><b>${h.bd}</b></span><span>${h.sf==="n/a"?"sq ft n/a":h.sf.toLocaleString()+" sq ft"}</span><span>Built ${h.y}</span><span>Lot ${h.lot}</span><span>Garage ${h.gar}</span><span>${h.dr}</span></div>
+<p class="d">${h.d}</p>
+<div class="pc"><div class="p"><h3>Pros</h3><ul>${h.pro.map(x=>`<li>${x}</li>`).join("")}</ul></div><div class="c"><h3>Cons</h3><ul>${h.con.map(x=>`<li>${x}</li>`).join("")}</ul></div></div>
+<a class="go" href="${h.u}" target="_blank" rel="noopener">Open listing and photos</a></article>`).join("");
+}
+draw();
+</script>
+</body>
+</html>
